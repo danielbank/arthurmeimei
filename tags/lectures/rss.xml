@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>Arthur and Mei Mei School</title>
+        <link>https%3A//www.arthurmeimei.com</link>
+        <description>School for Arthurs and Mei Meis</description>
+        <generator>Zola</generator>
+        <language>en</language>
+        <atom:link href="https%3A//www.arthurmeimei.com/tags/lectures/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Fri, 09 Oct 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Science and Math Lectures</title>
+                <pubDate>Fri, 09 Oct 2020 00:00:00 +0000</pubDate>
+                <link>https%3A//www.arthurmeimei.com/20201009/</link>
+                <guid>https%3A//www.arthurmeimei.com/20201009/</guid>
+                <description>&lt;p&gt;Science and Math Lectures on &lt;a href=&quot;https:&#x2F;&#x2F;www.youtube.com&#x2F;channel&#x2F;UCsG2_wYtteZ3iEx0POkHSWQ&quot;&gt;Arthur and Mei Mei School YouTube Channel&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
+</description>
+            </item>
+        
+    </channel>
+</rss>
