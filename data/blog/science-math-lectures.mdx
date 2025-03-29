@@ -2,12 +2,24 @@
 title: Science and Math Lectures
 date: '2020-10-09'
 tags: ['science', 'math', 'lectures']
+layout: PostBanner
+images: ['/static/images/derivative-cosx.jpg']
+summary: Lectures on Science and Math from the Arthur and Mei Mei School YouTube Channel
 draft: false
-summary: Science and Math Lectures on Arthur and Mei Mei School YouTube Channel
 authors: ['arthur']
 ---
 
-Science and Math Lectures on [Arthur and Mei Mei School YouTube Channel](https://www.youtube.com/channel/UCsG2_wYtteZ3iEx0POkHSWQ)
+# Lectures on Science and Math from the [Arthur and Mei Mei School YouTube Channel](https://www.youtube.com/channel/UCsG2_wYtteZ3iEx0POkHSWQ)
+
+- [Trigonometric Functions](https://www.youtube.com/watch?v=f87v9DIEnRE)
+- [The Exponential Function](https://www.youtube.com/watch?v=f87v9DIEnRE)
+  - [additional proof of the basic exponentiation identity, e^(a+b) = e^a \* e^b](https://www.youtube.com/watch?v=m8tSDSJ6y2w)
+- [de Moirve's Thereom](https://www.youtube.com/watch?v=alm7uI5vzcc)
+- [Power Functions and Their Derivatives](https://www.youtube.com/watch?v=uaqxW7gOFa0)
+- [The Gaussian Integral](https://www.youtube.com/watch?v=xIOs2ysIqn8)
+- [Einstein's Special Theory of Relativity](https://www.youtube.com/watch?v=fNrItQM3WBA)
+- [Lagrangian Mechanics](https://www.youtube.com/watch?v=cpKcIsJZKlM)
+- [Nebulae and Interacting Galaxies](https://www.youtube.com/watch?v=1u6OkgRPVgc)
 
 # Trigonometric Functions
 
@@ -23,6 +35,14 @@ Science and Math Lectures on [Arthur and Mei Mei School YouTube Channel](https:/
 
 [Watch the lecture here](https://www.youtube.com/watch?v=alm7uI5vzcc).
 
+# Lagrangian Mechanics
+
+[Watch the lecture here](https://www.youtube.com/watch?v=cpKcIsJZKlM).
+
+# Nebulae and Interacting Galaxies
+
+[Watch the lecture here](https://www.youtube.com/watch?v=1u6OkgRPVgc).
+
 # Power Functions and Their Derivatives
 
 [Watch the lecture here](https://www.youtube.com/watch?v=uaqxW7gOFa0).
@@ -31,14 +51,136 @@ Science and Math Lectures on [Arthur and Mei Mei School YouTube Channel](https:/
 
 [Watch the lecture here](https://www.youtube.com/watch?v=xIOs2ysIqn8).
 
+## Key Concepts
+
+This presentation explains how Pascal's Triangle relates to derivatives and power functions. The core insight is that when expanding $(x+h)^n$, the coefficient of the $h^1$ term gives us the derivative of $x^n$.
+
+## Pascal's Triangle
+
+Pascal's Triangle is introduced as a mathematical pattern where each number is the sum of the two numbers above it. This triangle provides the coefficients when expanding binomial expressions.
+
+## Calculating Powers Using Pascal's Triangle
+
+The presentation demonstrates how to use Pascal's Triangle to expand expressions like $(x+h)^n$:
+
+For $(x+h)^2$:
+$$(x+h)^2 = x^2 + 2xh + h^2$$
+
+For $(x+h)^3$:
+$$(x+h)^3 = (x+h)^2 \cdot (x+h) = (x^2 + 2xh + h^2)(x+h) = x^3 + 3x^2h + 3xh^2 + h^3$$
+
+The pattern continues for higher powers, which can be calculated using the binomial coefficients from Pascal's Triangle.
+
+## Connection to Derivatives
+
+The key insight of the presentation is that when expanding $(x+h)^n$, the coefficient of $h^1$ is precisely the derivative of $x^n$.
+
+Examples:
+
+- In $(x+h)^2 = x^2 + 2xh + h^2$, the coefficient of $h^1$ is $2x$, which is the derivative of $x^2$
+- For higher powers, this pattern continues, leading to the general formula:
+
+$$\frac{d}{dx}(x^n) = nx^{n-1}$$
+
+## Even and Odd Functions
+
+The presentation concludes with definitions of even and odd functions:
+
+- Even function: $f(-x) = f(x)$
+- Odd function: $f(-x) = -f(x)$
+
+## Summary
+
+The presentation elegantly connects Pascal's Triangle to calculus by showing how binomial expansion naturally reveals the derivatives of power functions. This approach provides an intuitive understanding of why the power rule $\frac{d}{dx}(x^n) = nx^{n-1}$ works.
+
 # Einstein's Special Theory of Relativity
 
 [Watch the lecture here](https://www.youtube.com/watch?v=fNrItQM3WBA).
 
-# Lagrangian Mechanics
+# The Story of Relativity: Understanding Light Speed and Time Dilation
 
-[Watch the lecture here](https://www.youtube.com/watch?v=cpKcIsJZKlM).
+## Historical Context
 
-# Nebulae and Interacting Galaxies
+The understanding of light's behavior has evolved dramatically over time:
 
-[Watch the lecture here](https://www.youtube.com/watch?v=1u6OkgRPVgc).
+- Initially, many believed light traveled instantaneously
+- In 1676, Danish astronomer **Ole Rømer** (1644-1710) made the first measurements of the speed of light
+- Later, **Armand Hippolyte Louis Fizeau** (1819-1896) improved these measurements
+- The speed of light was determined to be approximately $3 \times 10^8$ meters per second
+
+## The Speed of Light Paradox
+
+A natural question arose: If you moved toward a light source, would you measure the light as traveling faster relative to you? This would be consistent with our everyday experience of motion (like a ball thrown at 10 m/s hitting someone running toward it at 5 m/s with a relative speed of 15 m/s).
+
+## Maxwell's Contribution
+
+In 1861, **James Clerk Maxwell** presented his four laws of electrodynamics:
+
+- His equations showed light propagates as a wave
+- The speed of light appears as a constant in these equations
+- Notably, these equations made no reference to the motion of the source or observer
+
+## The Michelson-Morley Experiment (1887)
+
+**Albert A. Michelson** and **Edward W. Morley** conducted an experiment at Case Western Reserve University to detect differences in light speed based on motion:
+
+- Their apparatus split light along two paths and then recombined it to create an interference pattern
+- They expected this pattern to change based on the Earth's motion through space
+- Surprisingly, they detected no difference
+- This unexpected result suggested that everyone measures the same speed of light regardless of relative motion to the source
+
+## Einstein's Special Relativity (1905)
+
+Nearly 20 years after the Michelson-Morley experiment, **Albert Einstein** proposed his Special Theory of Relativity to explain these counterintuitive findings:
+
+- If everyone measures the same speed of light, then they must not measure time or distance identically
+- This represented a paradigm shift from Newton's universal space and time
+
+In Newton's view:
+
+- Space is described by Cartesian coordinates (x, y, z) that everyone perceives identically
+- Time (t) is universal - the same for all observers
+
+In Einstein's relativity:
+
+- Each observer has their own clock and measuring tools
+- They don't have to agree on measurements of time or distance
+- Light can be used as a standard measure since its speed is constant for all observers
+
+## Time Dilation Explained
+
+When two observers ("dudes") are moving relative to each other:
+
+1. Each observer in their own reference frame measures the same light speed
+2. If observer 1 watches observer 2's clock (who is moving relative to observer 1)
+3. Observer 1 will see light travel a longer path in observer 2's frame
+4. Since light speed is constant, observer 1 must perceive that observer 2's clock runs slower
+
+Through the Pythagorean theorem and algebra, this leads to Einstein's famous time dilation formula:
+
+$$T' = \frac{T}{\sqrt{1-\frac{v^2}{c^2}}}$$
+
+Where:
+
+- $T'$ is the time measured by an observer watching another observer's clock
+- $T$ is the time measured by an observer using their own clock
+- $v$ is the relative velocity between observers
+- $c$ is the speed of light
+
+## Example Calculation
+
+For a relative velocity of half the speed of light ($v = \frac{c}{2}$):
+
+$$\frac{T'}{T} = \frac{1}{\sqrt{1-\frac{(\frac{c}{2})^2}{c^2}}} = \frac{1}{\sqrt{1-\frac{1}{4}}} = \frac{1}{\sqrt{\frac{3}{4}}} = \frac{1}{\frac{\sqrt{3}}{2}} = \frac{2}{\sqrt{3}}$$
+
+This demonstrates that at half the speed of light, significant time dilation occurs between the two reference frames.
+
+## Significance
+
+Einstein's Special Theory of Relativity fundamentally changed our understanding of:
+
+- The relationship between space and time
+- The nature of energy and momentum
+- The geometry of spacetime
+
+The theory shows that what appears to be a "failure" in experimental results can sometimes lead to revolutionary scientific breakthroughs that transform our understanding of the universe.

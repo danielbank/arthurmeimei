@@ -1,22 +1,122 @@
 ---
 title: Circuits Lectures
-date: '2020-10-09'
+date: '2021-07-24'
 tags: ['science', 'circuits', 'lectures']
+layout: PostBanner
+images: ['/static/images/circuits.jpg']
+summary: Lectures on Circuits from the Arthur and Mei Mei School YouTube Channel
 draft: false
-summary: Circuits Lectures on Arthur and Mei Mei School YouTube Channel
 authors: ['arthur']
 ---
 
-Circuits Lectures on [Arthur and Mei Mei School YouTube Channel](https://www.youtube.com/channel/UCsG2_wYtteZ3iEx0POkHSWQ)
+# Lectures on Circuits from the [Arthur and Mei Mei School YouTube Channel](https://www.youtube.com/channel/UCsG2_wYtteZ3iEx0POkHSWQ)
+
+- [Voltage Divider Circuit](https://www.youtube.com/watch?v=87SxO-NP0XU)
+- [Passive RC Filter Circuits](https://www.youtube.com/watch?v=zHpEoPHfMhY)
+- [LC Circuit](https://www.youtube.com/watch?v=OF3AUQ2tOfk)
 
 # Voltage Divider Circuit
 
 [Watch the lecture here](https://www.youtube.com/watch?v=87SxO-NP0XU).
 
+A voltage divider circuit consists of two resistors (R1 and R2) connected in series between the input voltage and ground, with the output taken between the resistors.
+
+## Key Points
+
+- The circuit follows Ohm's Law, which establishes a ratio between the output and input voltage
+- When tested with different waveforms, each with 4 volts peak-to-peak input:
+  - Sine wave: 2 volts peak-to-peak output
+  - Square wave: 2 volts peak-to-peak output
+  - Saw tooth wave: 2 volts peak-to-peak output
+
+## Conclusion
+
+The voltage divider consistently reduces the amplitude by half while preserving the shape of the waveform, regardless of the input waveform type.
+
 # Passive RC Filter Circuits
 
 [Watch the lecture here](https://www.youtube.com/watch?v=zHpEoPHfMhY).
 
+## Resistive Voltage Divider
+
+- A voltage divider circuit consists of two resistors (R1 and R2) in series between input and ground
+- The output is taken across R2 (between R2 and ground)
+- Using Ohm's law, the output voltage is proportional to the input voltage by the ratio of resistances
+- In the demonstration, a 4V peak-to-peak input sine wave produced a 2V peak-to-peak output
+- With resistors, various input waveforms (sine, square, sawtooth) maintain their shape but have reduced amplitude
+- The circuit reduces amplitude while preserving waveform shape
+
+## Capacitive Voltage Divider (RC Circuit)
+
+- When replacing a resistor with a capacitor, the behavior changes
+- A capacitor's resistance (impedance) varies based on its charge state
+- The impedance of a capacitor with a sine wave input can be calculated using complex notation:
+  - \(Z = \frac{1}{i\omega C}\) where:
+    - i is the imaginary unit
+    - ω (omega) is the angular frequency
+    - C is the capacitance
+  - The units of impedance are ohms
+
+## RC Circuit Frequency Response
+
+- With a 5V, 600Hz square wave input, the output resembles "shark fins"
+- At lower frequencies (200Hz), the output nearly resembles a square wave as the capacitor has time to charge/discharge
+- At higher frequencies (17,000Hz), the output takes on a sawtooth appearance
+- Unlike the resistive divider, the RC circuit changes both the amplitude and shape of the waveform depending on the frequency
+
+The circuit demonstrates fundamental principles of electrical engineering including voltage division, impedance, and frequency response.
+
 # LC Circuit
 
 [Watch the lecture here](https://www.youtube.com/watch?v=OF3AUQ2tOfk).
+
+## Basic Components
+
+- **Inductor**: A coil of wire that induces a magnetic field when current flows through it
+- **Capacitor**: A component used to store electric charge
+
+## Key Physical Principles
+
+- **Faraday's Law**: A changing magnetic field causes current
+  - Demonstrated with a magnet and meter: when the magnet moves, current is detected
+  - When stationary, no current flows
+
+## Mathematical Analysis
+
+- The general solution for charge (q) in an LC circuit is:
+  - \(q = A\cos(\omega t) + B\sin(\omega t)\)
+  - Alternatively: \(q = C\sin(\omega t + \phi)\)
+  - All solutions are wave-like, where:
+    - Changing phase moves the wave left / right
+    - Changing amplitude makes the wave bigger / smaller
+
+## Differential Equations
+
+- The differential equation for an LC circuit: \(\ddot{q} + q = 0\)
+- This shows both sine and cosine functions are solutions
+- Similar to the equation governing a spring system
+
+## Energy and Dampening
+
+- In a real circuit, oscillations decay over time
+- Energy is not perfectly conserved due to resistance
+- All components and wires have some resistance
+- Current flow produces heat, leaking energy to the environment
+
+## LRC Circuit
+
+- The governing equation: \(L\ddot{q} + R\dot{q} + \frac{q}{C} = 0\)
+- Similar to a bouncing ball that loses energy with each bounce
+
+## Thermodynamics Connection
+
+- No system is perfectly insulated
+- All systems leak energy (Second Law of Thermodynamics)
+
+## How the Circuit Works
+
+1. When a capacitor discharges, current in the inductor creates a magnetic field (Ampere's Law)
+2. When fully discharged, no current flows and the magnetic field collapses
+3. The collapsing field causes a back current (Faraday's Law)
+4. This recharges the capacitor in the opposite direction
+5. This cycle continues, creating oscillations
