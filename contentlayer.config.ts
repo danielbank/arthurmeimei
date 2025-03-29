@@ -156,7 +156,7 @@ export default makeSource({
       remarkExtractFrontmatter,
       remarkGfm,
       remarkCodeTitles,
-      remarkMath,
+      [remarkMath, { singleDollarTextMath: true }],
       remarkImgToJsx,
       remarkAlert,
     ],
@@ -172,7 +172,7 @@ export default makeSource({
           content: icon,
         },
       ],
-      rehypeKatex,
+      [rehypeKatex, { strict: false, output: 'html' }],
       rehypeKatexNoTranslate,
       [rehypeCitation, { path: path.join(root, 'data') }],
       [rehypePrismPlus, { defaultLanguage: 'js', ignoreMissing: true }],
@@ -180,7 +180,8 @@ export default makeSource({
     ],
   },
   onSuccess: async (importData) => {
-    const { allBlogs } = await importData()
+    const { allDocuments } = await importData()
+    const allBlogs = allDocuments.filter((doc) => doc._raw.sourceFileDir === 'blog')
     createTagCount(allBlogs)
     createSearchIndex(allBlogs)
   },

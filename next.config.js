@@ -63,8 +63,11 @@ const unoptimized = process.env.UNOPTIMIZED ? true : undefined
 /**
  * @type {import('next/dist/next-server/server/config').NextConfig}
  **/
-module.exports = () => {
+module.exports = async () => {
   const plugins = [withContentlayer, withBundleAnalyzer]
+  const remarkMath = await import('remark-math')
+  const rehypeKatex = await import('rehype-katex')
+
   return plugins.reduce((acc, next) => next(acc), {
     output,
     basePath,
@@ -97,6 +100,10 @@ module.exports = () => {
       })
 
       return config
+    },
+    experimental: {
+      mdxRs: true,
+      esmExternals: true,
     },
   })
 }

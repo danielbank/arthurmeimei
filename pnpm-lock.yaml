@@ -44,6 +44,9 @@ importers:
       image-size:
         specifier: 1.0.0
         version: 1.0.0
+      katex:
+        specifier: ^0.16.21
+        version: 0.16.21
       next:
         specifier: 15.1.4
         version: 15.1.4(@babel/core@7.26.10)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -75,7 +78,7 @@ importers:
         specifier: ^2.0.0
         version: 2.2.2
       rehype-katex:
-        specifier: ^7.0.0
+        specifier: ^7.0.1
         version: 7.0.1
       rehype-katex-notranslate:
         specifier: ^1.1.4
