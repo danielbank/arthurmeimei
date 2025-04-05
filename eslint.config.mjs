@@ -14,7 +14,17 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: [],
+    ignores: [
+      '.next/**',
+      'node_modules/**',
+      'dist/**',
+      'build/**',
+      'coverage/**',
+      '*.d.ts',
+      '.contentlayer/**',
+      '.yarn/**',
+      '**/generated/**',
+    ],
   },
   js.configs.recommended,
   ...compat.extends(
