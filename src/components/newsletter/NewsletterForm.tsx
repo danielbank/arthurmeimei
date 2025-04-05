@@ -47,7 +47,7 @@ export default function NewsletterForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form id="newsletter-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <h1 className="text-2xl font-bold">Subscribe to Our Newsletter!</h1>
         <p className="text-sm text-gray-500">
           Get the latest news and updates from Arthur and Mei Mei.
