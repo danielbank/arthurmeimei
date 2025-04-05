@@ -77,7 +77,7 @@ async function createTagCount(allBlogs) {
     }
   })
   const formatted = await prettier.format(JSON.stringify(tagCount, null, 2), { parser: 'json' })
-  writeFileSync('./app/tag-data.json', formatted)
+  writeFileSync('./src/app/tag-data.json', formatted)
 }
 
 function createSearchIndex(allBlogs) {

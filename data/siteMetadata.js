@@ -10,7 +10,7 @@ const siteMetadata = {
   siteRepo: 'https://github.com/danielbank/arthurandmeimei',
   siteLogo: `${process.env.BASE_PATH || ''}/static/images/logo.png`,
   socialBanner: `${process.env.BASE_PATH || ''}/static/images/twitter-card.png`,
-  email: 'daniel.p.bank+arthurmeimei@gmail.com',
+  email: 'daniel@xaac.com',
   github: 'https://github.com/adelebank',
   // mastodon: '',
   // x: 'https://twitter.com/x',
