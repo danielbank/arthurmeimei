@@ -36,6 +36,51 @@ authors: ['arthur']
   allowFullScreen
 ></iframe>
 
+## Complex Numbers and Their Properties
+
+A complex number is an expression of the form $$z = a + bi$$ where $$i$$ has the property $$i^2 = -1$$. In the x-y plane:
+
+- The distance from origin is its magnitude
+- By Pythagorean Theorem, $$|z|^2 = a^2 + b^2$$
+- Complex numbers can be added and multiplied
+- Multiplication uses distributive law and $$i^2 = -1$$
+
+## Complex Conjugates
+
+If $$z = a + bi$$, then $$\overline{z} = a - bi$$ is its conjugate. Notable properties:
+
+- $$z \times \overline{z} = a^2 + b^2 = |z|^2$$
+- The conjugate of $$z \times w$$ equals the conjugate of $$z$$ times the conjugate of $$w$$
+
+## Exponential Function
+
+The exponential function is defined for every complex number $$z$$ by a power series. For real numbers $$t$$:
+
+- The conjugate of $$e^{it}$$ is $$e^{-it}$$
+- $$|e^{it}| = 1$$ for all real numbers $$t$$
+
+## Real and Imaginary Parts
+
+- If $$z = a + bi$$, $$a$$ is the real part and $$b$$ is the imaginary part
+- The real part of $$e^{it}$$ is $$\cos(t)$$
+- The imaginary part of $$e^{it}$$ is $$\sin(t)$$
+- Since $$|e^{it}| = 1$$, we get $$\cos^2(t) + \sin^2(t) = 1$$
+
+## Derivatives
+
+- $$\frac{d}{dt}(e^{it}) = ie^{it}$$
+- Comparing real and imaginary parts:
+  - $$\frac{d}{dt}(\cos(t)) = -\sin(t)$$
+  - $$\frac{d}{dt}(\sin(t)) = \cos(t)$$
+
+#### Unit Circle and Pi
+
+- $$e^{it}$$ traces the unit circle starting at $$e^{i0} = 1$$
+- When $$t = \pi$$, $$e^{i\pi} = -1$$
+- When $$t = 2\pi$$, $$e^{i2\pi} = 1$$
+- In general, $$e^{i2n\pi} = 1$$ for any integer $$n$$
+- This gives us the famous identity: $$e^{i\pi} + 1 = 0$$
+
 # Trigonometric Functions
 
 <iframe
@@ -49,6 +94,27 @@ authors: ['arthur']
   referrerPolicy="strict-origin-when-cross-origin"
   allowFullScreen
 ></iframe>
+
+## Key Points About Trigonometric Functions
+
+- **Cosine Properties**:
+
+  - Contains only even powers in its series expansion
+  - Symmetric function $$f(x) = f(-x)$$
+
+- **Sine Properties**:
+
+  - Contains only odd powers in its series expansion
+  - Antisymmetric function $$f(-x) = -f(x)$$
+
+- **Differential Equations**:
+
+  - Sine is a solution to specific differential equations
+  - General solutions can be expressed with amplitude parameters
+
+- **Domain Considerations**:
+  - Some related functions are restricted to $$\left[-\frac{\pi}{2}, \frac{\pi}{2}\right]$$
+  - Sine itself is defined across the entire real number line
 
 # The Exponential Function
 
@@ -152,7 +218,7 @@ A young Arthur (six years old) reviews various [Messier](https://en.wikipedia.or
 
 ## Key Concepts
 
-This presentation explains how Pascal's Triangle relates to derivatives and power functions. The core insight is that when expanding $(x+h)^n$, the coefficient of the $h^1$ term gives us the derivative of $x^n$.
+This presentation explains how Pascal's Triangle relates to derivatives and power functions. The core insight is that when expanding $$(x+h)^n$$, the coefficient of the $$h^1$$ term gives us the derivative of $$x^n$$.
 
 ## Pascal's Triangle
 
@@ -160,23 +226,23 @@ Pascal's Triangle is introduced as a mathematical pattern where each number is t
 
 ## Calculating Powers Using Pascal's Triangle
 
-The presentation demonstrates how to use Pascal's Triangle to expand expressions like $(x+h)^n$:
+The presentation demonstrates how to use Pascal's Triangle to expand expressions like $$(x+h)^n$$:
 
-For $(x+h)^2$:
+For $$(x+h)^2$$:
 $$(x+h)^2 = x^2 + 2xh + h^2$$
 
-For $(x+h)^3$:
+For $$(x+h)^3$$:
 $$(x+h)^3 = (x+h)^2 \cdot (x+h) = (x^2 + 2xh + h^2)(x+h) = x^3 + 3x^2h + 3xh^2 + h^3$$
 
 The pattern continues for higher powers, which can be calculated using the binomial coefficients from Pascal's Triangle.
 
 ## Connection to Derivatives
 
-The key insight of the presentation is that when expanding $(x+h)^n$, the coefficient of $h^1$ is precisely the derivative of $x^n$.
+The key insight of the presentation is that when expanding $$(x+h)^n$$, the coefficient of $$h^1$$ is precisely the derivative of $$x^n$$.
 
 Examples:
 
-- In $(x+h)^2 = x^2 + 2xh + h^2$, the coefficient of $h^1$ is $2x$, which is the derivative of $x^2$
+- In $$(x+h)^2 = x^2 + 2xh + h^2$$, the coefficient of $$h^1$$ is $$2x$$, which is the derivative of $$x^2$$
 - For higher powers, this pattern continues, leading to the general formula:
 
 $$\frac{d}{dx}(x^n) = nx^{n-1}$$
@@ -185,12 +251,12 @@ $$\frac{d}{dx}(x^n) = nx^{n-1}$$
 
 The presentation concludes with definitions of even and odd functions:
 
-- Even function: $f(-x) = f(x)$
-- Odd function: $f(-x) = -f(x)$
+- Even function: $$f(-x) = f(x)$$
+- Odd function: $$f(-x) = -f(x)$$
 
 ## Summary
 
-The presentation elegantly connects Pascal's Triangle to calculus by showing how binomial expansion naturally reveals the derivatives of power functions. This approach provides an intuitive understanding of why the power rule $\frac{d}{dx}(x^n) = nx^{n-1}$ works.
+The presentation elegantly connects Pascal's Triangle to calculus by showing how binomial expansion naturally reveals the derivatives of power functions. This approach provides an intuitive understanding of why the power rule $$\frac{d}{dx}(x^n) = nx^{n-1}$$ works.
 
 # Einstein's Special Theory of Relativity
 
@@ -213,7 +279,7 @@ The understanding of light's behavior has evolved dramatically over time:
 - Initially, many believed light traveled instantaneously
 - In 1676, Danish astronomer **Ole Rømer** (1644-1710) made the first measurements of the speed of light
 - Later, **Armand Hippolyte Louis Fizeau** (1819-1896) improved these measurements
-- The speed of light was determined to be approximately $3 \times 10^8$ meters per second
+- The speed of light was determined to be approximately $$3 \times 10^8$$ meters per second
 
 ## The Speed of Light Paradox
 
@@ -269,14 +335,14 @@ $$T' = \frac{T}{\sqrt{1-\frac{v^2}{c^2}}}$$
 
 Where:
 
-- $T'$ is the time measured by an observer watching another observer's clock
-- $T$ is the time measured by an observer using their own clock
-- $v$ is the relative velocity between observers
-- $c$ is the speed of light
+- $$T'$$ is the time measured by an observer watching another observer's clock
+- $$T$$ is the time measured by an observer using their own clock
+- $$v$$ is the relative velocity between observers
+- $$c$$ is the speed of light
 
 ## Example Calculation
 
-For a relative velocity of half the speed of light ($v = \frac{c}{2}$):
+For a relative velocity of half the speed of light ($$v = \frac{c}{2}$$):
 
 $$\frac{T'}{T} = \frac{1}{\sqrt{1-\frac{(\frac{c}{2})^2}{c^2}}} = \frac{1}{\sqrt{1-\frac{1}{4}}} = \frac{1}{\sqrt{\frac{3}{4}}} = \frac{1}{\frac{\sqrt{3}}{2}} = \frac{2}{\sqrt{3}}$$
 
