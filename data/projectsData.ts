@@ -12,6 +12,12 @@ const projectsData: Project[] = [
     imgSrc: '/static/images/spooky-friend-rescue.jpg',
     href: 'https://spooky-friend-rescue.lovable.app/',
   },
+  {
+    title: 'New Enemy Best Friend',
+    description: `A book series by Adele about New Enemy Best Friend is about a dog and a cat and adventures they have (Ages 8 - 10).`,
+    imgSrc: '/static/images/new-enemy-best-friend.jpg',
+    href: '/blog/new-enemy-best-friend',
+  },
 ]
 
 export default projectsData
