@@ -7,6 +7,12 @@ interface Project {
 
 const projectsData: Project[] = [
   {
+    title: '7 Segment Proximity-Meter',
+    description: `We created a circuit where a 7-segment display measures distance in cm based on the proximity sensor.`,
+    imgSrc: '/static/images/7-segment.jpg',
+    href: '/blog/7-segment',
+  },
+  {
     title: 'Proximity Sensor and LED Circuit',
     description: `We started learning robotics during the summer to prepare for the robotics electives I'm taking next year. We created a circuit where an LED activates once a proximity sensor detects nearby objects within 6 inches.`,
     imgSrc: '/static/images/proximity-sensor.jpg',
