@@ -1,0 +1,27 @@
+---
+title: Proximity Sensor and LED
+date: '2025-05-31'
+tags: ['vibe-coding', 'games', 'math', 'projects']
+layout: PostBanner
+images: ['']
+draft: false
+summary: We created an LED that activates based on a proximity sensor
+---
+
+# Proximity Sensor Based LED
+
+We started learning robotics during the summer to prepare for the robotics electives I'm taking next year. Here's a project we created along the way! Here's how it works:
+
+1. The process begins with a 2µs (microsecond) delay before the proximity sensor emits ultrasonic sound waves. This emission is triggered by setting the `Trig Pin` **HIGH** for 10µs (microseconds).
+
+2. The sensor then measures the time it takes for the sound waves to travel out from the emittor, bounce off a target, and return to the sensor. We can then calculate the distance to the target with the following formula alculates the distance in inches using this formula (in inches):
+
+$$
+\text{Distance (inches)} = \frac{\text{Duration (seconds)}}{2} \times \text{Speed of Sound (inches/second)}
+$$
+
+3. At room temperature, the speed of sound is approximately 343 m/s, which converts to 0.0343 centimeters/microsecond, or 0.0135 inches/microsecond.
+
+4. The calculated distance is printed to the serial monitor and compared to a predefined threshold of 6 inches.
+
+5. If the distance is 6 inches or less, the LED activates. If the distance is greater than 6 inches, the LED remains off.
