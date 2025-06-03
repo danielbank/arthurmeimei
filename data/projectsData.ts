@@ -7,10 +7,10 @@ interface Project {
 
 const projectsData: Project[] = [
   {
-    title: 'Proximity Sensor and LED',
+    title: 'Proximity Sensor and LED Circuit',
     description: `We started learning robotics during the summer to prepare for the robotics electives I'm taking next year. We created a circuit where an LED activates once a proximity sensor detects nearby objects within 6 inches.`,
-    imgSrc: '/static/images/proximity-sensor-and-led.jpg',
-    href: '/blog/proximity-sensor-and-led',
+    imgSrc: '/static/images/proximity-sensor.jpg',
+    href: '/blog/proximity-sensor',
   },
   {
     title: 'Spooky Friend Rescue',

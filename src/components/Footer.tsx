@@ -1,15 +1,11 @@
 import Link from './Link'
 import siteMetadata from '@/data/siteMetadata'
 import SocialIcon from '@/components/social-icons'
-import NewsletterForm from './newsletter/NewsletterForm'
 
 export default function Footer() {
   return (
     <footer>
       <hr className="my-8" />
-      <div className="flex items-center justify-center pt-4">
-        <NewsletterForm />
-      </div>
       <div className="mt-16 flex flex-col items-center">
         <div className="mb-3 flex space-x-4">
           <SocialIcon kind="mail" href={`mailto:${siteMetadata.email}`} size={6} />
