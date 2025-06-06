@@ -1,0 +1,91 @@
+---
+title: 7 Segment Proximity-Meter
+date: '2025-06-04'
+tags: ['coding', 'science', 'robotics', 'circuits']
+layout: PostBanner
+images: ['/static/images/7-segment.jpg']
+draft: false
+summary: We created a 7-segment that measures distance based on a proximity sensor
+---
+
+# Proximity Sensor Activated 7-Segment
+
+We also built a circuit where a 7-segment measures distance in cm based on the proximity sensor. It works like this:
+
+1. It will initially display 0000 since no objects are towards it.
+
+2. The same measures to calculate distance are used (refer to our blog Proximity Sensor and LED Circuit)\*, although this time the process is repeated 5 times and the average of the distances is computed.
+
+3. The average is displayed on the 7-segment. It only displays for ranges of 2-400 cm, since 2 cm or less is too close for accurate measure, and 400+ cm is the range limit for proximity sensors.
+
+\*Since cm is used instead of inches, the following formulae are used:
+
+$$
+Duration = Total/5
+Distance(cm) = Duration*Speed(Sound)/2
+int shown = (int)(cm+0.5)
+$$
+
+int is short for integer, and the speed of sound at 20 C is 0.0343 cm/microsecond, so that is the reference number used.
+
+## Diagram
+
+![7 Segment Circuit Diagram](/static/images/7-segment-diagram.png)
+
+## Arduino Sketch
+
+```c
+#include <TM1638plus.h>
+
+#define STB 4
+#define CLK 3
+#define DIO 2
+#define TRIG_PIN 9
+#define ECHO_PIN 10
+
+TM1638plus display(STB, CLK, DIO);
+
+void setup() {
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  display.displayBegin();
+  display.reset();
+
+  // Show 0000 at start
+  display.displayText("0000    ");  // 8 chars needed, pad with spaces
+  delay(1000);
+}
+
+long readDistance() {
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  return pulseIn(ECHO_PIN, HIGH);
+}
+
+void loop() {
+  long total = 0;
+  for (int i = 0; i < 5; i++) {
+    total += readDistance();
+    delay(50);
+  }
+
+  long duration = total / 5;
+  float cm = duration * 0.034 / 2.0;
+  int shown = (int)(cm + 0.5);
+
+  if (shown < 2 || shown > 400) {
+    shown = 0;
+  }
+
+  // Create zero-padded 4-digit string
+  char buffer[9];  // 8 chars + null terminator
+  snprintf(buffer, sizeof(buffer), "%04d    ", shown); // Pad to 8 chars total (4 digits + 4 spaces)
+
+  display.displayText(buffer);
+
+  delay(250);
+}
+```
