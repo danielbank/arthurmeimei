@@ -11,7 +11,6 @@ import Footer from '@/components/Footer'
 import siteMetadata from '@/data/siteMetadata'
 import { ThemeProviders } from './theme-providers'
 import { Metadata } from 'next'
-import { Toaster } from '@/components/ui/sonner'
 
 import 'katex/dist/katex.min.css'
 
@@ -107,7 +106,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </SearchProvider>
             <Footer />
           </SectionContainer>
-          <Toaster />
         </ThemeProviders>
       </body>
     </html>
