@@ -3,11 +3,11 @@
   "version": "2.3.0",
   "private": true,
   "scripts": {
-    "start": "next dev --turbopack",
-    "dev": "cross-env INIT_CWD=$PWD next dev",
-    "build": "cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
+    "start": "contentlayer2 build && next dev --turbopack",
+    "dev": "contentlayer2 build && cross-env INIT_CWD=$PWD next dev",
+    "build": "contentlayer2 build && cross-env INIT_CWD=$PWD next build && cross-env NODE_OPTIONS='--experimental-json-modules' node ./scripts/postbuild.mjs",
     "serve": "next start",
-    "analyze": "cross-env ANALYZE=true next build",
+    "analyze": "contentlayer2 build && cross-env ANALYZE=true next build",
     "lint": "next lint --fix --dir pages --dir app --dir components --dir lib --dir layouts --dir scripts",
     "format": "prettier --write .",
     "prepare": "husky"
