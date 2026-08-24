@@ -100,7 +100,16 @@ All decisions are made; these are the ordered build backlog.
 - ✅ [Engine wiring & game loop](tickets/12-engine-wiring.md) — **done**: AI move
   picker (inline, level 2) + reducer loop (tick clock + move cadence) + game-over
   overlay; the game plays itself. 12 tests green. On `frooktions-build`.
-- [Game-over UX, polish, responsive & a11y](tickets/13-gameover-polish.md) — **frontier** (the finish line).
+- ✅ [Game-over UX, polish, responsive & a11y](tickets/13-gameover-polish.md) — **done**:
+  battle log, choose-your-minor, overlay polish, focus/aria, responsive. On `frooktions-build`.
+
+## 🏁 Destination reached
+
+All decisions made and all build tickets closed. **Frooktions is playable at
+`/frooktions`** in the `fraction-math-game` app: solve fraction / GCD problems to
+earn and place chess pieces, while the robots drop escalating material and both AI
+armies fight to checkmate. `pnpm test` (12 green), `tsc`, and `next build` all
+pass. Work lives on branch `frooktions-build` (commits `b8864d5`…`HEAD`).
 
 ## Out of scope (v1)
 

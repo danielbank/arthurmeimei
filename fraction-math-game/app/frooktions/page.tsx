@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { BoardColumn } from '@/components/frooktions/board-column'
 import { MathColumn } from '@/components/frooktions/math-column'
+import { BattleLog } from '@/components/frooktions/battle-log'
 import { GameOverOverlay } from '@/components/frooktions/game-over-overlay'
 import { useFrooktions } from '@/components/frooktions/use-frooktions'
 import { legalDropSquares } from '@/lib/frooktions/legality'
@@ -44,16 +45,23 @@ export default function FrooktionsPage() {
             placeSquares={placeSquares}
             onPlace={(square) => dispatch({ type: 'PLACE_PIECE', square })}
           />
-          <MathColumn
-            disabled={state.pending !== null || state.phase === 'game-over'}
-            onEarn={(piece) => dispatch({ type: 'EARN_PIECE', piece })}
-            onWrong={() => dispatch({ type: 'WRONG_ANSWER' })}
-          />
+          <div className="flex flex-col gap-4">
+            <MathColumn
+              disabled={state.pending !== null || state.phase === 'game-over'}
+              onEarn={(piece) => dispatch({ type: 'EARN_PIECE', piece })}
+              onWrong={() => dispatch({ type: 'WRONG_ANSWER' })}
+            />
+            <BattleLog log={state.log} />
+          </div>
         </div>
       </div>
 
       {state.result && (
-        <GameOverOverlay result={state.result} onRestart={() => dispatch({ type: 'RESTART' })} />
+        <GameOverOverlay
+          result={state.result}
+          fen={state.fen}
+          onRestart={() => dispatch({ type: 'RESTART' })}
+        />
       )}
     </main>
   )

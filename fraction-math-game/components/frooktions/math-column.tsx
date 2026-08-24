@@ -29,6 +29,8 @@ export function MathColumn({
   const [question, setQuestion] = useState<Question | null>(null)
   const [qid, setQid] = useState(0)
   const [hintMode, setHintMode] = useState(false)
+  // the Minor tier earns a generic minor; the player picks knight or bishop here
+  const [awaitingMinor, setAwaitingMinor] = useState(false)
 
   function draw(t: Tier) {
     if (disabled) return
@@ -41,8 +43,18 @@ export function MathColumn({
     setTier(null)
   }
   function correct() {
-    if (tier) onEarn(TIER_PIECE[tier])
-    clear()
+    if (tier === 'minor') {
+      setQuestion(null) // keep tier=minor; show the knight/bishop chooser
+      setAwaitingMinor(true)
+    } else {
+      if (tier) onEarn(TIER_PIECE[tier])
+      clear()
+    }
+  }
+  function chooseMinor(piece: 'n' | 'b') {
+    onEarn(piece)
+    setAwaitingMinor(false)
+    setTier(null)
   }
   function wrong() {
     onWrong()
@@ -58,8 +70,9 @@ export function MathColumn({
           </p>
           <button
             onClick={() => setHintMode((h) => !h)}
+            aria-pressed={hintMode}
             className={cn(
-              'inline-flex items-center gap-1.5 rounded-full border-2 border-transparent px-3 py-1.5 text-xs font-bold transition',
+              'focus-visible:ring-primary inline-flex items-center gap-1.5 rounded-full border-2 border-transparent px-3 py-1.5 text-xs font-bold transition focus-visible:ring-2 focus-visible:outline-none',
               hintMode
                 ? 'bg-primary text-primary-foreground'
                 : 'bg-muted/50 text-muted-foreground hover:border-primary'
@@ -68,11 +81,35 @@ export function MathColumn({
             <Wand2 className="size-3.5" /> Hints: {hintMode ? 'on' : 'off'}
           </button>
         </div>
-        <TierPicker selected={tier} disabled={disabled || !!question} onPick={draw} />
+        <TierPicker
+          selected={tier}
+          disabled={disabled || !!question || awaitingMinor}
+          onPick={draw}
+        />
       </div>
 
       <div className="bg-card min-h-40 rounded-2xl border p-5 shadow-sm">
-        {question ? (
+        {awaitingMinor ? (
+          <div className="flex min-h-28 flex-col items-center justify-center gap-3 text-center">
+            <p className="text-sm font-semibold">Choose your minor piece:</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => chooseMinor('n')}
+                className="hover:border-primary focus-visible:ring-primary bg-muted/50 rounded-2xl border-2 border-transparent px-5 py-3 text-3xl leading-none focus-visible:ring-2 focus-visible:outline-none"
+                aria-label="Place a knight"
+              >
+                ♞<span className="mt-1 block text-xs font-bold">Knight</span>
+              </button>
+              <button
+                onClick={() => chooseMinor('b')}
+                className="hover:border-primary focus-visible:ring-primary bg-muted/50 rounded-2xl border-2 border-transparent px-5 py-3 text-3xl leading-none focus-visible:ring-2 focus-visible:outline-none"
+                aria-label="Place a bishop"
+              >
+                ♝<span className="mt-1 block text-xs font-bold">Bishop</span>
+              </button>
+            </div>
+          </div>
+        ) : question ? (
           <QuestionCard
             key={qid}
             question={question}

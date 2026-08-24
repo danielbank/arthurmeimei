@@ -29,8 +29,9 @@ export function TierPicker({
           key={t.tier}
           disabled={disabled}
           onClick={() => onPick(t.tier)}
+          aria-label={`${t.name} tier — ${t.dsc}`}
           className={cn(
-            'bg-muted/50 flex flex-col items-center gap-0.5 rounded-2xl border-2 border-transparent p-3 text-center transition',
+            'bg-muted/50 focus-visible:ring-primary flex flex-col items-center gap-0.5 rounded-2xl border-2 border-transparent p-3 text-center transition focus-visible:ring-2 focus-visible:outline-none',
             !disabled && 'hover:border-primary active:translate-y-0.5',
             disabled && 'cursor-not-allowed opacity-40',
             selected === t.tier && 'border-primary bg-primary/10'

@@ -5,6 +5,16 @@
 /** chess.js piece types (lowercase). */
 export type PieceType = 'p' | 'n' | 'b' | 'r' | 'q' | 'k'
 
+/** Human-readable piece names (for the battle log). */
+export const PIECE_NAME: Record<PieceType, string> = {
+  p: 'Pawn',
+  n: 'Knight',
+  b: 'Bishop',
+  r: 'Rook',
+  q: 'Queen',
+  k: 'King',
+}
+
 /** Adversary auto-drops one piece this often. */
 export const ADVERSARY_DROP_INTERVAL_MS = 10_000
 
