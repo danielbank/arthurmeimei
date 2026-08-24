@@ -1,18 +1,9 @@
-import typescriptEslint from '@typescript-eslint/eslint-plugin'
 import globals from 'globals'
-import tsParser from '@typescript-eslint/parser'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
-import js from '@eslint/js'
-import { FlatCompat } from '@eslint/eslintrc'
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals'
+import prettierRecommended from 'eslint-plugin-prettier/recommended'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-})
-
-export default [
+/** @type {import('eslint').Linter.Config[]} */
+const config = [
   {
     ignores: [
       '.next/**',
@@ -26,41 +17,24 @@ export default [
       '**/generated/**',
     ],
   },
-  js.configs.recommended,
-  ...compat.extends(
-    'plugin:@typescript-eslint/eslint-recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:jsx-a11y/recommended',
-    'plugin:prettier/recommended',
-    'next',
-    'next/core-web-vitals'
-  ),
+  ...nextCoreWebVitals,
+  prettierRecommended,
   {
-    plugins: {
-      '@typescript-eslint': typescriptEslint,
-    },
-
     languageOptions: {
       globals: {
         ...globals.browser,
         ...globals.amd,
         ...globals.node,
       },
-
-      parser: tsParser,
-      ecmaVersion: 5,
-      sourceType: 'commonjs',
-
-      parserOptions: {
-        project: true,
-        tsconfigRootDir: __dirname,
-      },
     },
-
+  },
+  // react / jsx-a11y overrides — scoped to match eslint-config-next's plugin registration
+  {
+    files: ['**/*.{js,jsx,mjs,ts,tsx,mts,cts}'],
     rules: {
-      'prettier/prettier': 'error',
       'react/react-in-jsx-scope': 'off',
-
+      'react/prop-types': 'off',
+      'react/no-unescaped-entities': 'off',
       'jsx-a11y/anchor-is-valid': [
         'error',
         {
@@ -69,12 +43,18 @@ export default [
           aspects: ['invalidHref', 'preferButton'],
         },
       ],
-      'react/prop-types': 'off',
+    },
+  },
+  // typescript-eslint overrides — only where the @typescript-eslint plugin is registered
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
       '@typescript-eslint/no-unused-vars': 'off',
-      'react/no-unescaped-entities': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-var-requires': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
     },
   },
 ]
+
+export default config

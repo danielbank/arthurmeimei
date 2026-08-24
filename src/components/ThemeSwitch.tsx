@@ -58,7 +58,9 @@ const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false)
   const { theme, setTheme, resolvedTheme } = useTheme()
 
-  // When mounted on client, now we can show the UI
+  // When mounted on client, now we can show the UI.
+  // One-shot hydration guard — the single mount flip can't cause cascading renders.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), [])
 
   return (
