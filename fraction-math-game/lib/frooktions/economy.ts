@@ -1,13 +1,12 @@
-// Economy: drops, escalation, penalty pawn, place-then-earn — wayfinder ticket 04
-// (constants) + ticket 02 (drops obey the placement contract, mirrored).
+// Economy: drops, escalation, penalty pawn — wayfinder ticket 04 (constants) +
+// ticket 02 (drops obey the placement contract, mirrored to the adversary half).
 //
-// Pure and framework-free so it can be unit-tested without React (ticket 11).
-//
-// TODO(build ticket 11): implement drop scheduling + escalation + penalty; route
-// every adversary drop through legality.tryDrop (mirror contract, no check).
+// Pure and framework-free (unit-tested in game.test.ts). An injectable `rng`
+// makes drops deterministic in tests.
 
 import type { Chess } from 'chess.js'
 import { escalationPool, type PieceType } from './constants'
+import { legalDropSquares } from './legality'
 
 /** Pick the adversary's next drop type from the elapsed-time escalation pool. */
 export function nextAdversaryDropType(
@@ -18,15 +17,25 @@ export function nextAdversaryDropType(
   return pool[Math.floor(rng() * pool.length)]
 }
 
-/** Apply one adversary timed drop to the board. No-op stub for now. */
-export function adversaryDrop(_chess: Chess, _elapsedSec: number): boolean {
-  // TODO(ticket 11): choose type via nextAdversaryDropType, find a legal mirror
-  // square (legality.legalDropSquares for black), apply via legality.tryDrop.
-  return false
+/** Drop one adversary (black) piece on a legal mirror square. Mutates `chess`.
+ *  Returns the dropped type, or null if no legal square. */
+export function adversaryDrop(
+  chess: Chess,
+  elapsedSec: number,
+  rng: () => number = Math.random
+): PieceType | null {
+  const type = nextAdversaryDropType(elapsedSec, rng)
+  const squares = legalDropSquares(chess, 'b', type)
+  if (squares.length === 0) return null
+  chess.put({ type, color: 'b' }, squares[Math.floor(rng() * squares.length)])
+  return type
 }
 
-/** Apply the wrong-answer penalty pawn to the adversary (single-Submit tiers). */
-export function penaltyPawn(_chess: Chess): boolean {
-  // TODO(ticket 11): drop one black pawn per the mirror contract.
-  return false
+/** Wrong-answer penalty: drop one black pawn on a legal mirror square (ticket 03).
+ *  Mutates `chess`; returns true if applied. */
+export function penaltyPawn(chess: Chess, rng: () => number = Math.random): boolean {
+  const squares = legalDropSquares(chess, 'b', 'p')
+  if (squares.length === 0) return false
+  chess.put({ type: 'p', color: 'b' }, squares[Math.floor(rng() * squares.length)])
+  return true
 }

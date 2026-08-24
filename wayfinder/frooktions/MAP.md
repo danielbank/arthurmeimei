@@ -94,8 +94,10 @@ All decisions are made; these are the ordered build backlog.
 - ✅ [Math column (generator, tiers, Hint Mode, GCD ladder)](tickets/10-math-column.md) — **done**:
   generator (4 tiers) + tier picker + question card (fraction Submit & guided GCD
   ladder) + wand Hint Mode; earn→place→penalty loop live. Verified. On `frooktions-build`.
-- [Economy & tick engine (reducer)](tickets/11-economy-engine.md) — **frontier** (after scaffold).
-- [Engine wiring & game loop](tickets/12-engine-wiring.md) — after board + economy.
+- ✅ [Economy & tick engine (reducer)](tickets/11-economy-engine.md) — **done**: pure
+  reducer (TICK/earn/place/wrong/apply-move) + economy, 9 vitest tests green. Caught
+  the two-king insufficient-material draw (amended ticket 06). On `frooktions-build`.
+- [Engine wiring & game loop](tickets/12-engine-wiring.md) — **frontier** (needs board + economy — both done).
 - [Game-over UX, polish, responsive & a11y](tickets/13-gameover-polish.md) — final.
 
 ## Out of scope (v1)

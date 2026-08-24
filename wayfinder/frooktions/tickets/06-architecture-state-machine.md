@@ -76,6 +76,11 @@ After each move, `chess.js` checks game over: **checkmate** → win (adversary m
 **game-over overlay** shows the result + **Play again** (reseeds to two kings). No
 wall-clock cap.
 
+**Amended by ticket 11:** only **checkmate** (win/lose) and **stalemate** (draw)
+end the game — NOT insufficient-material / fifty-move / threefold draws. The
+two-king start _is_ an insufficient-material draw to `chess.js`, so those draw
+rules must be ignored or the game ends at kickoff.
+
 ### Phases
 
 `setup(grace) → playing → game-over`. The loop only drops/moves during `playing`;
