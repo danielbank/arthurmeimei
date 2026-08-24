@@ -15,15 +15,17 @@ export interface EuclidStep {
 export interface Question {
   tier: Tier
   kind: 'fraction' | 'gcd'
-  /** fraction tiers: a/b + c/d; answer accepted as any fraction equal to sumN/sumD */
+  /** fraction tiers: a/b (op) c/d; answer accepted as any fraction equal to sumN/sumD */
   fraction?: {
     a: number
     b: number
     c: number
     d: number
+    /** '+' = addition, '×' = multiplication (rook can be either, ticket: rook set) */
+    op: '+' | '×'
     sumN: number
     sumD: number
-    /** hint only offered when denominators differ (no ×1/1 no-op) */
+    /** hint only offered when adding unlike denominators (no ×1/1 no-op) */
     canHint: boolean
   }
   /** queen tier: the Euclidean ladder + the GCD (last nonzero divisor) */
@@ -64,7 +66,18 @@ function fractionQuestion(tier: Tier, b: number, d: number): Question {
   return {
     tier,
     kind: 'fraction',
-    fraction: { a, b, c, d, sumN: a * (L / b) + c * (L / d), sumD: L, canHint: b !== d },
+    fraction: { a, b, c, d, op: '+', sumN: a * (L / b) + c * (L / d), sumD: L, canHint: b !== d },
+  }
+}
+
+/** a/b × c/d — the product is (a·c)/(b·d). No common-denominator hint applies. */
+function fractionMultiplyQuestion(tier: Tier, b: number, d: number): Question {
+  const a = ri(1, b - 1)
+  const c = ri(1, d - 1)
+  return {
+    tier,
+    kind: 'fraction',
+    fraction: { a, b, c, d, op: '×', sumN: a * c, sumD: b * d, canHint: false },
   }
 }
 
@@ -93,11 +106,19 @@ export function generateQuestion(tier: Tier): Question {
       return fractionQuestion('minor', b, d)
     }
     case 'rook': {
-      // unlike denominators, larger (a harder common-denominator find)
-      let b = pick([4, 6, 8, 9, 12])
-      let d = pick([6, 8, 9, 10, 12])
-      while (b === d) d = pick([6, 8, 9, 10, 12])
-      return fractionQuestion('rook', b, d)
+      // rook set mixes two harder skills: unlike-denominator addition OR
+      // fraction multiplication (chosen at random each draw)
+      if (pick([true, false])) {
+        // unlike denominators, larger (a harder common-denominator find)
+        let b = pick([4, 6, 8, 9, 12])
+        let d = pick([6, 8, 9, 10, 12])
+        while (b === d) d = pick([6, 8, 9, 10, 12])
+        return fractionQuestion('rook', b, d)
+      }
+      // fraction multiplication
+      const b = pick([3, 4, 5, 6, 8])
+      const d = pick([3, 4, 5, 6, 8])
+      return fractionMultiplyQuestion('rook', b, d)
     }
     case 'queen': {
       // Euclidean chain of 2–4 steps with a GCD ≥ 2 (nicer problems)

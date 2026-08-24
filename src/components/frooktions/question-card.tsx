@@ -92,7 +92,7 @@ function FractionQuestion({
     <div className="flex flex-col gap-4">
       <div className="bg-muted/50 flex flex-wrap items-center justify-center gap-4 rounded-2xl p-6">
         {renderFraction(q.a, q.b, 'left', hintFactor(q.b, q.d))}
-        <span className="text-muted-foreground text-2xl font-bold">+</span>
+        <span className="text-muted-foreground text-2xl font-bold">{q.op}</span>
         {renderFraction(q.c, q.d, 'right', hintFactor(q.d, q.b))}
         <span className="text-muted-foreground text-2xl font-bold">=</span>
         <span className="flex flex-col items-center gap-1">
@@ -126,7 +126,16 @@ function FractionQuestion({
   )
 }
 
-function GcdQuestion({ q, onCorrect }: { q: NonNullable<Question['gcd']>; onCorrect: () => void }) {
+function GcdQuestion({
+  q,
+  onCorrect,
+  onWrong,
+}: {
+  q: NonNullable<Question['gcd']>
+  onCorrect: () => void
+  /** each wrong step hands the robots a random minor piece (ticket: queen penalty) */
+  onWrong: () => void
+}) {
   const [cur, setCur] = useState(0)
   const [phase, setPhase] = useState<'quotient' | 'remainder' | 'gcd'>('quotient')
   const [val, setVal] = useState('')
@@ -146,7 +155,8 @@ function GcdQuestion({ q, onCorrect }: { q: NonNullable<Question['gcd']>; onCorr
         setMsg('Good — now the remainder.')
       } else {
         setBad(true)
-        setMsg(`How many whole times does ${step.B} go into ${step.A}?`)
+        setMsg(`How many whole times does ${step.B} go into ${step.A}? (robots +1 minor)`)
+        onWrong()
       }
     } else if (phase === 'remainder') {
       if (v === step.D) {
@@ -162,13 +172,15 @@ function GcdQuestion({ q, onCorrect }: { q: NonNullable<Question['gcd']>; onCorr
         }
       } else {
         setBad(true)
-        setMsg(`Remainder = ${step.A} − ${step.B}×${step.C}. Try again.`)
+        setMsg(`Remainder = ${step.A} − ${step.B}×${step.C}. Try again. (robots +1 minor)`)
+        onWrong()
       }
     } else {
       if (v === q.result) onCorrect()
       else {
         setBad(true)
-        setMsg('The GCD is the last divisor in the ladder.')
+        setMsg('The GCD is the last divisor in the ladder. (robots +1 minor)')
+        onWrong()
       }
     }
   }
@@ -275,7 +287,7 @@ export function QuestionCard({
           onWrong={onWrong}
         />
       ) : question.gcd ? (
-        <GcdQuestion q={question.gcd} onCorrect={onCorrect} />
+        <GcdQuestion q={question.gcd} onCorrect={onCorrect} onWrong={onWrong} />
       ) : null}
       <button
         onClick={onSkip}

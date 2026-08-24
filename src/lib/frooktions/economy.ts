@@ -39,3 +39,14 @@ export function penaltyPawn(chess: Chess, rng: () => number = Math.random): bool
   chess.put({ type: 'p', color: 'b' }, squares[Math.floor(rng() * squares.length)])
   return true
 }
+
+/** Queen-tier wrong-answer penalty: hand the adversary a random minor piece
+ *  (knight or bishop). Mutates `chess`; returns the dropped type, or null if no
+ *  legal square exists. */
+export function penaltyMinor(chess: Chess, rng: () => number = Math.random): PieceType | null {
+  const type: PieceType = rng() < 0.5 ? 'n' : 'b'
+  const squares = legalDropSquares(chess, 'b', type)
+  if (squares.length === 0) return null
+  chess.put({ type, color: 'b' }, squares[Math.floor(rng() * squares.length)])
+  return type
+}

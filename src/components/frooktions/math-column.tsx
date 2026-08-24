@@ -2,35 +2,44 @@
 
 // The math column — wayfinder ticket 10. Tier picker + active question card +
 // the Hint Mode wand (ticket 07). Exposes onEarn/onWrong so the parent (economy
-// reducer, tickets 11/12) can grant material or apply the penalty pawn. While a
-// piece is pending placement (`disabled`), drawing a new question is blocked
-// (place-then-earn, ticket 04).
+// reducer, tickets 11/12) can grant material or apply the penalty. While a piece
+// is pending placement (`disabled`), drawing a new question is blocked
+// (place-then-earn, ticket 04). Each tier also has an attempt cap: once a tier is
+// solved its limit of times it's spent, forcing the player onto a harder set.
 
 import { useState } from 'react'
 import { Wand2 } from 'lucide-react'
 import { TierPicker } from './tier-picker'
 import { QuestionCard } from './question-card'
 import { generateQuestion, type Question } from '@/lib/frooktions/generator'
-import { TIER_PIECE, type PieceType } from '@/lib/frooktions/constants'
+import { TIER_ATTEMPT_CAP, TIER_PIECE, type PieceType } from '@/lib/frooktions/constants'
+import type { SolvedByTier } from '@/lib/frooktions/gameReducer'
 import type { Tier } from '@/lib/frooktions/types'
 import { cn } from '@/lib/utils'
 
 export function MathColumn({
   disabled = false,
+  solved,
   onEarn,
   onWrong,
 }: {
   /** true while a piece is pending placement — blocks drawing a new question */
   disabled?: boolean
-  onEarn: (piece: PieceType) => void
-  onWrong: () => void
+  /** correct-solve count per tier — drives which tiers have hit their cap */
+  solved: SolvedByTier
+  onEarn: (piece: PieceType, tier: Tier) => void
+  /** wrong Submit: 'pawn' for fraction tiers, 'minor' for the Queen ladder */
+  onWrong: (penalty: 'pawn' | 'minor') => void
 }) {
   const [tier, setTier] = useState<Tier | null>(null)
   const [question, setQuestion] = useState<Question | null>(null)
   const [qid, setQid] = useState(0)
   const [hintMode, setHintMode] = useState(false)
-  // the Minor tier earns a generic minor; the player picks knight or bishop here
-  const [awaitingMinor, setAwaitingMinor] = useState(false)
+
+  const cappedTiers = (Object.keys(TIER_ATTEMPT_CAP) as Tier[]).filter((t) => {
+    const cap = TIER_ATTEMPT_CAP[t]
+    return cap !== null && solved[t] >= cap
+  })
 
   function draw(t: Tier) {
     if (disabled) return
@@ -43,22 +52,21 @@ export function MathColumn({
     setTier(null)
   }
   function correct() {
-    if (tier === 'minor') {
-      setQuestion(null) // keep tier=minor; show the knight/bishop chooser
-      setAwaitingMinor(true)
-    } else {
-      if (tier) onEarn(TIER_PIECE[tier])
-      clear()
-    }
-  }
-  function chooseMinor(piece: 'n' | 'b') {
-    onEarn(piece)
-    setAwaitingMinor(false)
-    setTier(null)
-  }
-  function wrong() {
-    onWrong()
+    if (!tier) return
+    // Minor tier drops a random knight or bishop; other tiers grant their piece.
+    const piece: PieceType = tier === 'minor' ? (Math.random() < 0.5 ? 'n' : 'b') : TIER_PIECE[tier]
+    onEarn(piece, tier)
     clear()
+  }
+  // Fraction tiers: wrong Submit costs a pawn and ends the question.
+  function fractionWrong() {
+    onWrong('pawn')
+    clear()
+  }
+  // Queen ladder: each wrong step hands the robots a minor piece; the ladder
+  // stays open so the player can recover and finish.
+  function queenWrong() {
+    onWrong('minor')
   }
 
   return (
@@ -83,39 +91,20 @@ export function MathColumn({
         </div>
         <TierPicker
           selected={tier}
-          disabled={disabled || !!question || awaitingMinor}
+          disabled={disabled || !!question}
+          cappedTiers={cappedTiers}
           onPick={draw}
         />
       </div>
 
       <div className="bg-card min-h-40 rounded-2xl border p-5 shadow-sm">
-        {awaitingMinor ? (
-          <div className="flex min-h-28 flex-col items-center justify-center gap-3 text-center">
-            <p className="text-sm font-semibold">Choose your minor piece:</p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => chooseMinor('n')}
-                className="hover:border-primary focus-visible:ring-primary bg-muted/50 rounded-2xl border-2 border-transparent px-5 py-3 text-3xl leading-none focus-visible:ring-2 focus-visible:outline-none"
-                aria-label="Place a knight"
-              >
-                ♞<span className="mt-1 block text-xs font-bold">Knight</span>
-              </button>
-              <button
-                onClick={() => chooseMinor('b')}
-                className="hover:border-primary focus-visible:ring-primary bg-muted/50 rounded-2xl border-2 border-transparent px-5 py-3 text-3xl leading-none focus-visible:ring-2 focus-visible:outline-none"
-                aria-label="Place a bishop"
-              >
-                ♝<span className="mt-1 block text-xs font-bold">Bishop</span>
-              </button>
-            </div>
-          </div>
-        ) : question ? (
+        {question ? (
           <QuestionCard
             key={qid}
             question={question}
             hintMode={hintMode}
             onCorrect={correct}
-            onWrong={wrong}
+            onWrong={tier === 'queen' ? queenWrong : fractionWrong}
             onSkip={clear}
           />
         ) : (

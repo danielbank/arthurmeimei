@@ -18,14 +18,14 @@ export default function FrooktionsPage() {
   const placeSquares = state.pending ? legalDropSquares(state.chess, 'w', state.pending.type) : []
 
   return (
-    <main className="bg-background text-foreground min-h-screen">
-      <div className="mx-auto flex max-w-6xl flex-col gap-8 px-6 py-8 md:px-10 md:py-12">
+    <div className="text-foreground">
+      <div className="mx-auto flex flex-col gap-8 py-8">
         <header className="flex flex-col gap-3 border-b pb-6">
           <Link
             href="/"
             className="text-muted-foreground hover:text-foreground inline-flex w-fit items-center gap-1.5 text-sm"
           >
-            <ArrowLeft className="size-4" /> Math Lab
+            <ArrowLeft className="size-4" /> Home
           </Link>
           <div>
             <h1 className="text-4xl font-semibold tracking-tight md:text-5xl">
@@ -48,8 +48,9 @@ export default function FrooktionsPage() {
           <div className="flex flex-col gap-4">
             <MathColumn
               disabled={state.pending !== null || state.phase === 'game-over'}
-              onEarn={(piece) => dispatch({ type: 'EARN_PIECE', piece })}
-              onWrong={() => dispatch({ type: 'WRONG_ANSWER' })}
+              solved={state.solved}
+              onEarn={(piece, tier) => dispatch({ type: 'EARN_PIECE', piece, tier })}
+              onWrong={(penalty) => dispatch({ type: 'WRONG_ANSWER', penalty })}
             />
             <BattleLog log={state.log} />
           </div>
@@ -63,6 +64,6 @@ export default function FrooktionsPage() {
           onRestart={() => dispatch({ type: 'RESTART' })}
         />
       )}
-    </main>
+    </div>
   )
 }

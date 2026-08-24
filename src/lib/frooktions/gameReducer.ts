@@ -9,20 +9,29 @@
 
 import { Chess, type Square } from 'chess.js'
 import {
-  ADVERSARY_DROP_INTERVAL_MS,
+  dropIntervalMs,
   GRACE_PERIOD_MS,
   PIECE_NAME,
+  SPEEDUP_CLASSES,
   START_FEN,
   type PieceType,
 } from './constants'
-import { adversaryDrop, penaltyPawn } from './economy'
+import { adversaryDrop, penaltyMinor, penaltyPawn } from './economy'
 import { tryDrop } from './legality'
-import type { GameResult, PendingPiece, Phase } from './types'
+import type { GameResult, PendingPiece, Phase, Tier } from './types'
 
 /** The tick loop fires once per second, so tickCount is elapsed seconds. */
 const GRACE_SEC = GRACE_PERIOD_MS / 1000
-const DROP_INTERVAL_SEC = ADVERSARY_DROP_INTERVAL_MS / 1000
 const LOG_CAP = 40
+
+/** Per-tier count of correct solves so far (drives both tier caps & drop speed). */
+export type SolvedByTier = Record<Tier, number>
+
+/** How many advanced classes (minor/rook/queen) the player has solved at least
+ *  once — each one accelerates the adversary drops. */
+function advancedClassesSolved(solved: SolvedByTier): number {
+  return SPEEDUP_CLASSES.filter((t) => solved[t] > 0).length
+}
 
 /** A battle-log entry. `you` = the player's team, `foe` = the robots. Newest first. */
 export interface LogEntry {
@@ -47,6 +56,10 @@ export interface GameState {
   fen: string
   phase: Phase
   tickCount: number
+  /** seconds accumulated toward the next adversary drop (interval is dynamic) */
+  dropClock: number
+  /** correct solves per tier — feeds tier caps and drop-speed escalation */
+  solved: SolvedByTier
   hintMode: boolean
   pending: PendingPiece | null
   result: GameResult | null
@@ -57,9 +70,9 @@ export type GameMove = { from: string; to: string; promotion?: string }
 
 export type GameAction =
   | { type: 'TICK'; rng?: () => number }
-  | { type: 'EARN_PIECE'; piece: PieceType }
+  | { type: 'EARN_PIECE'; piece: PieceType; tier: Tier }
   | { type: 'PLACE_PIECE'; square: string }
-  | { type: 'WRONG_ANSWER'; rng?: () => number }
+  | { type: 'WRONG_ANSWER'; penalty?: 'pawn' | 'minor'; rng?: () => number }
   | { type: 'APPLY_MOVE'; move: GameMove }
   | { type: 'TOGGLE_HINT' }
   | { type: 'RESTART' }
@@ -71,6 +84,8 @@ export function initGameState(): GameState {
     fen: chess.fen(),
     phase: 'setup',
     tickCount: 0,
+    dropClock: 0,
+    solved: { pawn: 0, minor: 0, rook: 0, queen: 0 },
     hintMode: false,
     pending: null,
     result: null,
@@ -128,30 +143,49 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           ? { ...state, tickCount, phase: 'playing' }
           : { ...state, tickCount }
       }
-      // playing: adversary timed drop on cadence
-      const sinceGrace = tickCount - GRACE_SEC
-      if (sinceGrace > 0 && sinceGrace % DROP_INTERVAL_SEC === 0) {
+      // playing: adversary timed drop on a DYNAMIC cadence — faster to start, and
+      // faster still with every advanced class the player has mastered.
+      const intervalSec = dropIntervalMs(advancedClassesSolved(state.solved)) / 1000
+      const dropClock = state.dropClock + 1
+      if (dropClock >= intervalSec) {
         const chess = new Chess(state.chess.fen())
         const dropped = adversaryDrop(chess, tickCount, action.rng)
         const entry: LogEntry | undefined = dropped
           ? { t: tickCount, kind: 'foe', text: `Robots drop a ${PIECE_NAME[dropped]}` }
           : undefined
-        return afterBoardChange(state, chess, { tickCount }, entry)
+        return afterBoardChange(
+          state,
+          chess,
+          { tickCount, dropClock: dropClock - intervalSec },
+          entry
+        )
       }
-      return { ...state, tickCount }
+      return { ...state, tickCount, dropClock }
     }
 
     case 'EARN_PIECE': {
       // place-then-earn: only one pending piece at a time (ticket 04)
       if (state.pending) return state
+      // record the solve — feeds this tier's attempt cap and the drop-speed ramp
+      const solved = { ...state.solved, [action.tier]: state.solved[action.tier] + 1 }
+      const firstOfClass =
+        (SPEEDUP_CLASSES as readonly Tier[]).includes(action.tier) && solved[action.tier] === 1
+      const log = pushLog(state.log, {
+        t: state.tickCount,
+        kind: 'you',
+        text: `Earned a ${PIECE_NAME[action.piece]} — place it!`,
+      })
       return {
         ...state,
+        solved,
         pending: { type: action.piece },
-        log: pushLog(state.log, {
-          t: state.tickCount,
-          kind: 'you',
-          text: `Earned a ${PIECE_NAME[action.piece]} — place it!`,
-        }),
+        log: firstOfClass
+          ? pushLog(log, {
+              t: state.tickCount,
+              kind: 'sys',
+              text: `New skill unlocked — the robots drop faster now!`,
+            })
+          : log,
       }
     }
 
@@ -174,17 +208,18 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
     case 'WRONG_ANSWER': {
       const chess = new Chess(state.chess.fen())
-      penaltyPawn(chess, action.rng)
-      return afterBoardChange(
-        state,
-        chess,
-        {},
-        {
-          t: state.tickCount,
-          kind: 'foe',
-          text: 'Wrong answer → robots +1 pawn',
-        }
-      )
+      // Queen mistakes are costly: the robots gain a random minor piece; every
+      // other tier hands them a single pawn.
+      let text = 'Wrong answer → robots +1 pawn'
+      if (action.penalty === 'minor') {
+        const dropped = penaltyMinor(chess, action.rng)
+        text = dropped
+          ? `Wrong answer → robots +1 ${PIECE_NAME[dropped]}`
+          : 'Wrong answer → robots gain nothing (no room)'
+      } else {
+        penaltyPawn(chess, action.rng)
+      }
+      return afterBoardChange(state, chess, {}, { t: state.tickCount, kind: 'foe', text })
     }
 
     case 'APPLY_MOVE': {

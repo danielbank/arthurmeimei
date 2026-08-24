@@ -15,8 +15,34 @@ export const PIECE_NAME: Record<PieceType, string> = {
   k: 'King',
 }
 
-/** Adversary auto-drops one piece this often. */
+/** Base adversary drop cadence, before any speed-ups. */
 export const ADVERSARY_DROP_INTERVAL_MS = 10_000
+
+/** Drops start this fraction faster than the base cadence (25% faster). */
+export const INITIAL_DROP_SPEEDUP = 0.25
+
+/** Each newly-mastered advanced class speeds drops up by this fraction (50%). */
+export const CLASS_SPEEDUP = 0.5
+
+/** Solving one of these tiers for the FIRST time speeds up the adversary drops.
+ *  (Pawn is the easy on-ramp and never accelerates the assault.) */
+export const SPEEDUP_CLASSES = ['minor', 'rook', 'queen'] as const
+
+/** Effective drop interval (ms) after mastering `classesSolved` advanced classes.
+ *  Rate compounds: 25% faster to start, then ×1.5 per new class solved. */
+export function dropIntervalMs(classesSolved: number): number {
+  const rate = (1 + INITIAL_DROP_SPEEDUP) * (1 + CLASS_SPEEDUP) ** classesSolved
+  return ADVERSARY_DROP_INTERVAL_MS / rate
+}
+
+/** How many times each tier may be solved before it disables (forcing the player
+ *  onto a harder set). `null` = no cap. Queen is uncapped (it penalises instead). */
+export const TIER_ATTEMPT_CAP: Record<'pawn' | 'minor' | 'rook' | 'queen', number | null> = {
+  pawn: 6,
+  minor: 4,
+  rook: 2,
+  queen: null,
+}
 
 /** Each army makes a half-move this often (runs FASTER than drops, ticket 04 Q1). */
 export const ARMY_HALF_MOVE_INTERVAL_MS = 4_000

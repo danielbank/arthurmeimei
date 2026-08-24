@@ -2,8 +2,15 @@
 
 import { test, expect } from 'vitest'
 import { Chess } from 'chess.js'
-import { escalationPool, GRACE_PERIOD_MS, ADVERSARY_DROP_INTERVAL_MS } from './constants'
-import { nextAdversaryDropType, adversaryDrop, penaltyPawn } from './economy'
+import {
+  escalationPool,
+  GRACE_PERIOD_MS,
+  ADVERSARY_DROP_INTERVAL_MS,
+  dropIntervalMs,
+  INITIAL_DROP_SPEEDUP,
+  CLASS_SPEEDUP,
+} from './constants'
+import { nextAdversaryDropType, adversaryDrop, penaltyPawn, penaltyMinor } from './economy'
 import { gameReducer, initGameState, evaluateGameOver, type GameState } from './gameReducer'
 import { computeAiMove } from './ai'
 
@@ -66,15 +73,17 @@ test('TICK: grace gates playing, then drops on cadence', () => {
 
 test('EARN_PIECE is place-then-earn (one pending at a time)', () => {
   let s = initGameState()
-  s = gameReducer(s, { type: 'EARN_PIECE', piece: 'r' })
+  s = gameReducer(s, { type: 'EARN_PIECE', piece: 'r', tier: 'rook' })
   expect(s.pending?.type).toBe('r')
-  s = gameReducer(s, { type: 'EARN_PIECE', piece: 'q' })
+  s = gameReducer(s, { type: 'EARN_PIECE', piece: 'q', tier: 'queen' })
   expect(s.pending?.type).toBe('r') // second earn ignored while pending
+  expect(s.solved.rook).toBe(1) // the rook solve counted
+  expect(s.solved.queen).toBe(0) // the ignored earn did not
 })
 
 test('PLACE_PIECE: legal square places & clears pending; illegal is a no-op', () => {
   let s = initGameState()
-  s = gameReducer(s, { type: 'EARN_PIECE', piece: 'r' })
+  s = gameReducer(s, { type: 'EARN_PIECE', piece: 'r', tier: 'rook' })
   const illegal = gameReducer(s, { type: 'PLACE_PIECE', square: 'e4' }) // rook e4 checks e8
   expect(illegal.pending?.type).toBe('r')
   expect(material(illegal.fen, 'w')).toBe(0)
@@ -87,6 +96,55 @@ test('WRONG_ANSWER hands the adversary a penalty pawn', () => {
   let s = initGameState()
   s = gameReducer(s, { type: 'WRONG_ANSWER', rng: () => 0 })
   expect(material(s.fen, 'b')).toBe(1)
+})
+
+test('WRONG_ANSWER penalty=minor hands the adversary a knight or bishop', () => {
+  let s = initGameState()
+  s = gameReducer(s, { type: 'WRONG_ANSWER', penalty: 'minor', rng: () => 0 })
+  expect(material(s.fen, 'b')).toBe(3) // knight/bishop = 3, not a pawn
+  const placed = new Chess(s.fen)
+    .board()
+    .flat()
+    .find((x) => x && x.color === 'b' && x.type !== 'k')
+  expect(placed && (placed.type === 'n' || placed.type === 'b')).toBe(true)
+})
+
+test('penaltyMinor drops a black knight (rng<0.5) or bishop (rng>=0.5)', () => {
+  const c1 = new Chess('4k3/8/8/8/8/8/8/4K3 w - - 0 1')
+  expect(penaltyMinor(c1, () => 0)).toBe('n')
+  const c2 = new Chess('4k3/8/8/8/8/8/8/4K3 w - - 0 1')
+  expect(penaltyMinor(c2, () => 0.9)).toBe('b')
+})
+
+test('dropIntervalMs: 25% faster to start, then ×1.5 per advanced class solved', () => {
+  const base = ADVERSARY_DROP_INTERVAL_MS
+  expect(dropIntervalMs(0)).toBeCloseTo(base / (1 + INITIAL_DROP_SPEEDUP))
+  expect(dropIntervalMs(1)).toBeCloseTo(base / ((1 + INITIAL_DROP_SPEEDUP) * (1 + CLASS_SPEEDUP)))
+  expect(dropIntervalMs(3)).toBeCloseTo(
+    base / ((1 + INITIAL_DROP_SPEEDUP) * (1 + CLASS_SPEEDUP) ** 3)
+  )
+  // strictly monotonically faster
+  expect(dropIntervalMs(1)).toBeLessThan(dropIntervalMs(0))
+  expect(dropIntervalMs(2)).toBeLessThan(dropIntervalMs(1))
+})
+
+test('solving a new advanced class accelerates the adversary drop cadence', () => {
+  const GRACE = GRACE_PERIOD_MS / 1000
+  // baseline: no classes solved → first drop after ceil(dropIntervalMs(0)/1000) ticks
+  const firstDropTick = (init: GameState) => {
+    let s = init
+    while (material(s.fen, 'b') === 0 && s.tickCount < GRACE + 60) {
+      s = gameReducer(s, { type: 'TICK', rng: () => 0 })
+    }
+    return s.tickCount
+  }
+  const baseTick = firstDropTick(initGameState())
+
+  // pre-solve a minor class, then run from the same starting point
+  const primed = gameReducer(initGameState(), { type: 'EARN_PIECE', piece: 'n', tier: 'minor' })
+  const fastTick = firstDropTick(primed)
+
+  expect(fastTick).toBeLessThan(baseTick) // faster cadence → earlier first drop
 })
 
 test('APPLY_MOVE detects checkmate → result (player is white)', () => {
