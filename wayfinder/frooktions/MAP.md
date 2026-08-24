@@ -91,7 +91,9 @@ All decisions are made; these are the ordered build backlog.
 - ✅ [Board, pieces & placement UI](tickets/09-board-pieces.md) — **done**: legality
   contract implemented + verified, board/clock/tally components, placement UI. On
   branch `frooktions-build`.
-- [Math column (generator, tiers, Hint Mode, GCD ladder)](tickets/10-math-column.md) — **frontier** (after scaffold).
+- ✅ [Math column (generator, tiers, Hint Mode, GCD ladder)](tickets/10-math-column.md) — **done**:
+  generator (4 tiers) + tier picker + question card (fraction Submit & guided GCD
+  ladder) + wand Hint Mode; earn→place→penalty loop live. Verified. On `frooktions-build`.
 - [Economy & tick engine (reducer)](tickets/11-economy-engine.md) — **frontier** (after scaffold).
 - [Engine wiring & game loop](tickets/12-engine-wiring.md) — after board + economy.
 - [Game-over UX, polish, responsive & a11y](tickets/13-gameover-polish.md) — final.
