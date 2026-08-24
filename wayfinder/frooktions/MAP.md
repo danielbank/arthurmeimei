@@ -97,8 +97,10 @@ All decisions are made; these are the ordered build backlog.
 - ✅ [Economy & tick engine (reducer)](tickets/11-economy-engine.md) — **done**: pure
   reducer (TICK/earn/place/wrong/apply-move) + economy, 9 vitest tests green. Caught
   the two-king insufficient-material draw (amended ticket 06). On `frooktions-build`.
-- [Engine wiring & game loop](tickets/12-engine-wiring.md) — **frontier** (needs board + economy — both done).
-- [Game-over UX, polish, responsive & a11y](tickets/13-gameover-polish.md) — final.
+- ✅ [Engine wiring & game loop](tickets/12-engine-wiring.md) — **done**: AI move
+  picker (inline, level 2) + reducer loop (tick clock + move cadence) + game-over
+  overlay; the game plays itself. 12 tests green. On `frooktions-build`.
+- [Game-over UX, polish, responsive & a11y](tickets/13-gameover-polish.md) — **frontier** (the finish line).
 
 ## Out of scope (v1)
 

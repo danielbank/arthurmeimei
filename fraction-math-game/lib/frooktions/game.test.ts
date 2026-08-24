@@ -5,6 +5,7 @@ import { Chess } from 'chess.js'
 import { escalationPool, GRACE_PERIOD_MS, ADVERSARY_DROP_INTERVAL_MS } from './constants'
 import { nextAdversaryDropType, adversaryDrop, penaltyPawn } from './economy'
 import { gameReducer, initGameState, evaluateGameOver, type GameState } from './gameReducer'
+import { computeAiMove } from './ai'
 
 const GRACE = GRACE_PERIOD_MS / 1000
 const DROP = ADVERSARY_DROP_INTERVAL_MS / 1000
@@ -103,4 +104,42 @@ test('APPLY_MOVE detects checkmate → result (player is white)', () => {
 
 test('evaluateGameOver: ongoing game → null', () => {
   expect(evaluateGameOver(new Chess('4k3/8/8/8/8/8/8/4K3 w - - 0 1'))).toBe(null)
+})
+
+// ---- engine wiring (ticket 12) ----
+
+test('computeAiMove yields a chess.js-legal move, and null when mated', () => {
+  const fen = '4k3/8/8/8/8/8/R7/4K3 w - - 0 1'
+  const m = computeAiMove(fen)
+  expect(m).not.toBe(null)
+  expect(() => new Chess(fen).move(m!)).not.toThrow()
+  // white is checkmated (fool's mate final position), white to move → no move
+  expect(computeAiMove('rnbqkbnr/pppp1ppp/8/4p3/6Pq/5P2/PPPPP2P/RNBQKBNR w KQkq - 1 3')).toBe(null)
+})
+
+test('engine finds a mate-in-1 → reducer reports a win (ENGINE_LEVEL=2)', () => {
+  const mateIn1 = 'k7/7R/1K6/8/8/8/8/8 w - - 0 1' // Rh8#
+  const s: GameState = {
+    ...initGameState(),
+    phase: 'playing',
+    chess: new Chess(mateIn1),
+    fen: mateIn1,
+  }
+  const move = computeAiMove(mateIn1)
+  expect(move).not.toBe(null)
+  const after = gameReducer(s, { type: 'APPLY_MOVE', move: move! })
+  expect(after.result).toBe('win')
+})
+
+test('auto-play loop produces only legal moves for 40 plies (loop mechanics)', () => {
+  const START = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+  let s: GameState = { ...initGameState(), phase: 'playing', chess: new Chess(START), fen: START }
+  for (let ply = 0; ply < 40 && s.phase === 'playing'; ply++) {
+    const move = computeAiMove(s.fen)
+    if (!move) break // legitimate game-over
+    const next = gameReducer(s, { type: 'APPLY_MOVE', move })
+    expect(next.fen).not.toBe(s.fen) // the move was legal & applied
+    s = next
+  }
+  expect(true).toBe(true)
 })

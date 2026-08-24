@@ -1,49 +1,20 @@
 'use client'
 
-// Frooktions — wayfinder tickets 09 (board) + 10 (math column). The earn → place
-// → penalty loop is live here with local state. The AI game loop (moves, timed
-// adversary drops, escalation, win/lose) is wired by the economy reducer (11) and
-// engine loop (12), which replace this harness's local state.
+// Frooktions — the full game (wayfinder tickets 09/10/11/12). The reducer + loop
+// (useFrooktions) drive everything: earn → place, timed adversary drops +
+// escalation, both AI armies moving, and win/lose. Polish/battle-log = ticket 13.
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
-import { Chess, type Square } from 'chess.js'
 import { BoardColumn } from '@/components/frooktions/board-column'
 import { MathColumn } from '@/components/frooktions/math-column'
-import { START_FEN, type PieceType } from '@/lib/frooktions/constants'
-import { legalDropSquares, tryDrop } from '@/lib/frooktions/legality'
+import { GameOverOverlay } from '@/components/frooktions/game-over-overlay'
+import { useFrooktions } from '@/components/frooktions/use-frooktions'
+import { legalDropSquares } from '@/lib/frooktions/legality'
 
 export default function FrooktionsPage() {
-  const [chess] = useState(() => new Chess(START_FEN))
-  const [fen, setFen] = useState(chess.fen())
-  const [pending, setPending] = useState<PieceType | null>(null)
-  const [elapsedSec, setElapsedSec] = useState(0)
-
-  useEffect(() => {
-    const id = setInterval(() => setElapsedSec((s) => s + 1), 1000)
-    return () => clearInterval(id)
-  }, [])
-
-  const phase = elapsedSec < 10 ? 'setup' : 'playing'
-  const placeSquares = pending ? legalDropSquares(chess, 'w', pending) : []
-
-  function place(square: string) {
-    if (pending && tryDrop(chess, 'w', pending, square as Square)) {
-      setFen(chess.fen())
-      setPending(null)
-    }
-  }
-
-  // Wrong answer → the robots gain a penalty pawn (ticket 03). Timed escalation
-  // drops arrive with the engine loop (ticket 12).
-  function penaltyPawn() {
-    const squares = legalDropSquares(chess, 'b', 'p')
-    if (squares.length) {
-      tryDrop(chess, 'b', 'p', squares[Math.floor(Math.random() * squares.length)])
-      setFen(chess.fen())
-    }
-  }
+  const { state, dispatch } = useFrooktions()
+  const placeSquares = state.pending ? legalDropSquares(state.chess, 'w', state.pending.type) : []
 
   return (
     <main className="bg-background text-foreground min-h-screen">
@@ -67,15 +38,23 @@ export default function FrooktionsPage() {
 
         <div className="grid gap-6 lg:grid-cols-[1.05fr_.95fr]">
           <BoardColumn
-            fen={fen}
-            elapsedSec={elapsedSec}
-            phase={phase}
+            fen={state.fen}
+            elapsedSec={state.tickCount}
+            phase={state.phase}
             placeSquares={placeSquares}
-            onPlace={place}
+            onPlace={(square) => dispatch({ type: 'PLACE_PIECE', square })}
           />
-          <MathColumn disabled={pending !== null} onEarn={setPending} onWrong={penaltyPawn} />
+          <MathColumn
+            disabled={state.pending !== null || state.phase === 'game-over'}
+            onEarn={(piece) => dispatch({ type: 'EARN_PIECE', piece })}
+            onWrong={() => dispatch({ type: 'WRONG_ANSWER' })}
+          />
         </div>
       </div>
+
+      {state.result && (
+        <GameOverOverlay result={state.result} onRestart={() => dispatch({ type: 'RESTART' })} />
+      )}
     </main>
   )
 }
