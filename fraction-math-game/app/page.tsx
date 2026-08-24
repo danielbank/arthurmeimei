@@ -1,4 +1,5 @@
-import { BookOpen, CheckCircle2, FunctionSquare, Lightbulb, Sigma } from 'lucide-react'
+import Link from 'next/link'
+import { BookOpen, CheckCircle2, FunctionSquare, Lightbulb, Sigma, Swords } from 'lucide-react'
 import {
   FractionDemo,
   SectionCard,
@@ -37,6 +38,27 @@ export default function Home() {
             </div>
           </div>
         </header>
+        <Link
+          href="/frooktions"
+          className="group border-primary/30 from-primary/10 hover:border-primary/60 flex items-center justify-between gap-4 rounded-2xl border bg-gradient-to-r to-transparent px-6 py-5 transition"
+        >
+          <div className="flex items-center gap-4">
+            <span className="bg-primary/15 text-primary flex size-11 items-center justify-center rounded-xl">
+              <Swords className="size-5" />
+            </span>
+            <div>
+              <p className="text-primary font-mono text-xs font-semibold tracking-[0.18em] uppercase">
+                New · Game
+              </p>
+              <h2 className="mt-0.5 text-lg font-semibold tracking-tight">
+                Play Frooktions — solve fractions to build a chess army
+              </h2>
+            </div>
+          </div>
+          <span className="text-primary text-sm font-medium opacity-0 transition group-hover:opacity-100">
+            Play →
+          </span>
+        </Link>
         <div className="grid gap-6 lg:grid-cols-[1.15fr_.85fr]">
           <SectionCard
             eyebrow="01 / Fraction"

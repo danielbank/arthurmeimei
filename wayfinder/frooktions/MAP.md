@@ -83,11 +83,12 @@ _(empty — the way is fully charted; all remaining work is the live build ticke
 
 ## Build phase (execution tickets — the map carries into execution)
 
-All decisions are made; these are the ordered build backlog. Frontier starts at
-**Scaffold**, which unblocks the board / math / economy trio.
+All decisions are made; these are the ordered build backlog.
 
-- [Scaffold route, deps & lib skeleton](tickets/08-scaffold-deps.md) — foundation.
-- [Board, pieces & placement UI](tickets/09-board-pieces.md) — after scaffold.
+- ✅ [Scaffold route, deps & lib skeleton](tickets/08-scaffold-deps.md) — **done**:
+  deps installed, `/frooktions` route + home link, `lib/frooktions/` skeleton
+  (constants populated), `tsc`/`next build` green. On branch `frooktions-build`.
+- [Board, pieces & placement UI](tickets/09-board-pieces.md) — **frontier** (after scaffold).
 - [Math column (generator, tiers, Hint Mode, GCD ladder)](tickets/10-math-column.md) — after scaffold.
 - [Economy & tick engine (reducer)](tickets/11-economy-engine.md) — after scaffold.
 - [Engine wiring & game loop](tickets/12-engine-wiring.md) — after board + economy.
