@@ -7,6 +7,12 @@ interface Project {
 
 const projectsData: Project[] = [
   {
+    title: 'FocusPaw',
+    description: `A study app we built for the IncludAI Neurodiversity Hackathon. FocusPaw smart-sorts homework by due date and difficulty, runs 50/10 focus sessions, and uses a companion named Mochi to gently keep you on track.`,
+    imgSrc: '/static/images/focuspaw.jpg',
+    href: '/blog/focuspaw',
+  },
+  {
     title: '7 Segment Proximity-Meter',
     description: `We created a circuit where a 7-segment display measures distance in cm based on the proximity sensor.`,
     imgSrc: '/static/images/7-segment.jpg',
